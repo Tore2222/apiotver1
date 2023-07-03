@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "206187573588",
+    "firebase_url": "https://iotapp-fb613-default-rtdb.firebaseio.com",
+    "project_id": "iotapp-fb613",
+    "storage_bucket": "iotapp-fb613.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206187573588:android:c0ab15a66a508262e7d8c1",
+        "android_client_info": {
+          "package_name": "code4func.com.fluberapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3qyD8HOC58D_girwSqT1jQ0_g9zAJo34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206187573588:android:bf82928f87316116e7d8c1",
+        "android_client_info": {
+          "package_name": "com.example.clonetaxi"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3qyD8HOC58D_girwSqT1jQ0_g9zAJo34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:206187573588:android:6ae3f698da1ee0a9e7d8c1",
+        "android_client_info": {
+          "package_name": "com.example.iot"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3qyD8HOC58D_girwSqT1jQ0_g9zAJo34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
