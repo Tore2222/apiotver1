@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../../ServiceMQTT/MQTTManager.dart';
 import '../box/custom_card.dart';
+
 class LivingRoom extends StatefulWidget {
-  LivingRoom({super.key, required this.manager,
+  LivingRoom(
+      {super.key,
+      required this.manager,
       required this.state_d1,
       required this.state_d2,
       required this.state_d3,
@@ -55,6 +59,7 @@ class _LivingRoomState extends State<LivingRoom> {
     // _manager.publish(parse_json_data(get_data_device()),"test");
   }
 
+  // ignore: non_constant_identifier_names
   int get_data_device() {
     int data = 0;
     if (widget.state_d1) {
@@ -80,7 +85,6 @@ class _LivingRoomState extends State<LivingRoom> {
     return data;
   }
 
-  
   void upload(int data) {
     String jsonData = "{\"data\":$data}";
     try {
@@ -91,8 +95,17 @@ class _LivingRoomState extends State<LivingRoom> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    // widget.manager.connect(); // Sử dụng widget.manager để truy cập MQTTManager
+
+    widget.manager.connect(); // Kết nối với MQTT server
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         margin: EdgeInsets.all(size.width * 0.05),
@@ -113,6 +126,8 @@ class _LivingRoomState extends State<LivingRoom> {
                     title: "ENTRY",
                     statusOn: "OPEN",
                     statusOff: "LOCKED",
+                    isChecked: widget.state_d1,
+                    toggle: toggle_d1,
                   ),
                   CustomCard(
                     size: size,
@@ -124,6 +139,8 @@ class _LivingRoomState extends State<LivingRoom> {
                     title: "LIGHTS",
                     statusOn: "ON",
                     statusOff: "OFF",
+                    isChecked: widget.state_d2,
+                    toggle: toggle_d2,
                   ),
                 ],
               ),
@@ -141,6 +158,8 @@ class _LivingRoomState extends State<LivingRoom> {
                     title: "ENTRY",
                     statusOn: "OPEN",
                     statusOff: "LOCKED",
+                    isChecked: widget.state_d3,
+                    toggle: toggle_d3,
                   ),
                   CustomCard(
                     size: size,
@@ -152,6 +171,8 @@ class _LivingRoomState extends State<LivingRoom> {
                     title: "LIGHTS",
                     statusOn: "ON",
                     statusOff: "OFF",
+                    isChecked: widget.state_d4,
+                    toggle: toggle_d4,
                   ),
                 ],
               ),
@@ -162,28 +183,31 @@ class _LivingRoomState extends State<LivingRoom> {
                   CustomCard(
                     size: size,
                     icon: Icon(
-                      Icons.opacity,
+                      Icons.home_outlined,
                       size: 55,
                       color: Colors.grey.shade400,
                     ),
-                    title: "LEAKS",
-                    statusOn: "DETECTED",
-                    statusOff: "NOT DETECTED",
+                    title: "ENTRY",
+                    statusOn: "OPEN",
+                    statusOff: "LOCKED",
+                    isChecked: widget.state_d3,
+                    toggle: toggle_d3,
                   ),
                   CustomCard(
                     size: size,
                     icon: Icon(
-                      Icons.thermostat_outlined,
+                      Icons.lightbulb_outline,
                       size: 55,
                       color: Colors.grey.shade400,
                     ),
-                    title: "THERMOSTAT",
+                    title: "LIGHTS",
                     statusOn: "ON",
                     statusOff: "OFF",
+                    isChecked: widget.state_d4,
+                    toggle: toggle_d4,
                   ),
                 ],
               ),
-              SizedBox(height: size.height * 0.025),
               Container(
                 height: 75,
                 width: size.width * 0.8,

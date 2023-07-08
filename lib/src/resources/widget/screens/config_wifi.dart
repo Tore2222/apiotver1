@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:alan_voice/alan_voice.dart';
+
 import 'package:esp_smartconfig/esp_smartconfig.dart';
 
 import 'package:flutter/material.dart';
@@ -27,19 +27,7 @@ class _ConfigWifiPageState extends State<ConfigWifiPage> {
   String? wifiName;
   String? wifiBSSID;
   bool showPassword = false;
-  _ConfigWifiPageState() {
-    /// Init Alan Button with project key from Alan AI Studio
-    AlanVoice.addButton(
-        "112d58930d9579f9430a22fe21297be42e956eca572e1d8b807a3e2338fdd0dc/stage");
-    // ignore: unused_label
-    buttonAlign:
-    AlanVoice.BUTTON_ALIGN_RIGHT;
-
-    /// Handle commands from Alan AI Studio
-    AlanVoice.onCommand.add((command) {
-      debugPrint("got new command ${command.toString()}");
-    });
-  }
+  
   void send() async {
     final provisioner = Provisioner.espTouch();
     bool isSuccess = false;

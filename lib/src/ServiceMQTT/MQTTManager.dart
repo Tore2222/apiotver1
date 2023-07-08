@@ -29,7 +29,7 @@ class MQTTManager extends ChangeNotifier {
     _client.onUnsubscribed = onUnsubscribed;
 
     final connMess = MqttConnectMessage()
-        .withClientIdentifier("flutter_test")
+        .withClientIdentifier("flutter1")
         .authenticateAs("test", "test")
         .withWillTopic('willtopic')
         .withWillMessage('My Will message')

@@ -2,6 +2,9 @@ import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../ServiceMQTT/MQTTManager.dart';
+import 'apps.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key, required this.navigateToFivethPage});
   final VoidCallback navigateToFivethPage;
@@ -10,6 +13,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // void upload(int data) {
+  //   String jsonData = "{\"data\":$data}";
+  //   try {
+  //     _manager.publish(jsonData, "B4E62DB826BD_D");
+  //   } on Exception catch (e) {
+  //     print(e.toString());
+  //   }
+  // }
+
   _HomeScreenState() {
     /// Init Alan Button with project key from Alan AI Studio
     AlanVoice.addButton(
@@ -20,6 +32,20 @@ class _HomeScreenState extends State<HomeScreen> {
     /// Handle commands from Alan AI Studio
     AlanVoice.onCommand.add((command) {
       debugPrint("got new command ${command.toString()}");
+      // Xử lý các lệnh từ Alan AI Studio tại đây
+      // Dựa vào command để điều khiển các thiết bị trong phòng khách
+      // if (command.data['command'] == 'Turn on the lights in the kitchen') {
+      //   setState(() {
+      //     // Bật đèn trong phòng khách
+      //     upload(1);
+      //   });
+      // } else if (command.data['command'] == 'turn_off_light') {
+      //   setState(() {
+      //     // Tắt đèn trong phòng khách
+      //     upload(0);
+      //   });
+      // }
+      // Các lệnh khác tương tự
     });
   }
 
