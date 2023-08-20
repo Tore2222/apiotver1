@@ -10,10 +10,13 @@ import 'package:provider/provider.dart';
 import '../../../ServiceMQTT/MQTTManager.dart';
 
 class Apps extends StatefulWidget {
-  const Apps(
-      {required this.navigateToFivethPage, required this.navigateToFirstPage});
+   Apps(
+      {required this.navigateToFivethPage,
+      required this.navigateToFirstPage,
+      });
   final VoidCallback navigateToFirstPage;
   final VoidCallback navigateToFivethPage;
+  
   @override
   State<Apps> createState() => _AppsState();
 }
@@ -47,8 +50,8 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
   void initState() {
     // ignore: todo
     // TODO: implement initState
-    _tabController = TabController(length: 4, vsync: this);
-    _tabController.animateTo(2);
+    _tabController = TabController(length: 4, vsync: this);  
+    //_tabController.animateTo(2);
     ConnectMqtt();
     // _views = [
     //   Center(
@@ -60,9 +63,8 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
     //     state_d4: _manager.currentState.getd4,
     //   )),
     //   Center(child: Container()),
-
     //   Center(child: Container()),
-
+    // ];
     //   Center(child: Container()),
 
     //   // Center(child: const Kitchen()),
@@ -126,6 +128,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     // = Provider.of<MQTTManager>(context);
+    // _tabController.index = 1;
     _views = [
       Consumer<MQTTManager>(
         builder: (context, manager, _) {
@@ -142,7 +145,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
       ),
       Center(child: Container()),
       Center(child: Container()),
-      Center(child: Container()),
+      Center(child: OutSide()),
     ];
 
     return MultiProvider(
@@ -305,6 +308,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: TabBar(
+                            controller: _tabController,
                             tabs: _tabs,
                             isScrollable: true,
                             // Add more properties if needed
@@ -312,6 +316,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                         ),
                         Expanded(
                           child: TabBarView(
+                            controller: _tabController,
                             children: _views,
                           ),
                         ),

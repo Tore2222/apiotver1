@@ -3,18 +3,19 @@ import 'package:firebase_database/firebase_database.dart';
 
 class FirAuth {
   final FirebaseAuth _fireBaseAuth = FirebaseAuth.instance;
-
   void signUp(String email, String pass, String name, String phone,
       Function onSuccess, Function(String) onRegisterError) {
     _fireBaseAuth
         .createUserWithEmailAndPassword(email: email, password: pass)
         .then((user) {
       _createUser(user.user!.uid, name, phone, onSuccess, onRegisterError);
+      //final String userId=user.user!.uid;
     }).catchError((err) {
       print("err: " + err.toString());
       _onSignUpErr(err.code, onRegisterError);
     });
   }
+ 
 
   void signIn(String email, String pass, Function onSuccess,
       Function(String) onSignInError) {

@@ -23,9 +23,9 @@ class LivingRoom extends StatefulWidget {
 
 class _LivingRoomState extends State<LivingRoom> {
   void toggle_d1() {
-    setState(() {
-      widget.state_d1 = !widget.state_d1;
-    });
+    //setState(() {
+    widget.state_d1 = !widget.state_d1;
+    //});
     print(get_data_device());
     upload(get_data_device());
 
@@ -33,27 +33,27 @@ class _LivingRoomState extends State<LivingRoom> {
   }
 
   void toggle_d2() {
-    setState(() {
-      widget.state_d2 = !widget.state_d2;
-    });
+    // setState(() {
+    widget.state_d2 = !widget.state_d2;
+    // });
     print(get_data_device());
     upload(get_data_device());
     // _manager.publish(parse_json_data(get_data_device()),"test");
   }
 
   void toggle_d3() {
-    setState(() {
-      widget.state_d3 = !widget.state_d3;
-    });
+    //setState(() {
+    widget.state_d3 = !widget.state_d3;
+    //});
     print(get_data_device());
     upload(get_data_device());
     //  _manager.publish(parse_json_data(get_data_device()),"test");
   }
 
   void toggle_d4() {
-    setState(() {
-      widget.state_d4 = !widget.state_d4;
-    });
+    //setState(() {
+    widget.state_d4 = !widget.state_d4;
+    //});
     print(get_data_device());
     upload(get_data_device());
     // _manager.publish(parse_json_data(get_data_device()),"test");
@@ -176,38 +176,7 @@ class _LivingRoomState extends State<LivingRoom> {
                   ),
                 ],
               ),
-              SizedBox(height: size.height * 0.025),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  CustomCard(
-                    size: size,
-                    icon: Icon(
-                      Icons.home_outlined,
-                      size: 55,
-                      color: Colors.grey.shade400,
-                    ),
-                    title: "ENTRY",
-                    statusOn: "OPEN",
-                    statusOff: "LOCKED",
-                    isChecked: widget.state_d3,
-                    toggle: toggle_d3,
-                  ),
-                  CustomCard(
-                    size: size,
-                    icon: Icon(
-                      Icons.lightbulb_outline,
-                      size: 55,
-                      color: Colors.grey.shade400,
-                    ),
-                    title: "LIGHTS",
-                    statusOn: "ON",
-                    statusOff: "OFF",
-                    isChecked: widget.state_d4,
-                    toggle: toggle_d4,
-                  ),
-                ],
-              ),
+
               Container(
                 height: 75,
                 width: size.width * 0.8,

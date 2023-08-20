@@ -9,11 +9,10 @@ import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';
 
 import '../../../ServiceMQTT/MQTTManager.dart';
 import '../../../ServiceMQTT/service_locator.dart';
+import 'Test_Screen.dart';
 import 'apps.dart';
 import 'config_wifi.dart';
 import 'home_screen.dart';
-
-
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -26,9 +25,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+  int page = 0;
   void navigateToFivethPage() {
     setState(() {
       _currentIndex = 4;
+    });
+  }
+
+  void navigateToSecondPage() {
+    setState(() {
+      _currentIndex = 1;
     });
   }
 
@@ -93,13 +99,16 @@ class _HomePageState extends State<HomePage> {
         body: IndexedStack(
           index: _currentIndex,
           children: [
-            HomeScreen(navigateToFivethPage: navigateToFivethPage),
-            Apps(
+            HomeScreen(
               navigateToFivethPage: navigateToFivethPage,
-              navigateToFirstPage: navigateToFirstPage,
+              navigateToSecondPageCallback: navigateToSecondPage,
             ),
+            Apps(
+                navigateToFivethPage: navigateToFivethPage,
+                navigateToFirstPage: navigateToFirstPage,
+                ),
             ConfigWifiPage(),
-            Container(),
+            TestScreen(),
             ProfilePage(),
           ],
         ),

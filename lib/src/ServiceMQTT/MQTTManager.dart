@@ -3,9 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 import 'package:mqtt_client/mqtt_server_client.dart';
+import 'package:random_string/random_string.dart';
 
 import 'MQTTAppState.dart';
-
 
 class MQTTManager extends ChangeNotifier {
   // Private instance of client
@@ -29,7 +29,7 @@ class MQTTManager extends ChangeNotifier {
     _client.onUnsubscribed = onUnsubscribed;
 
     final connMess = MqttConnectMessage()
-        .withClientIdentifier("flutter1")
+        .withClientIdentifier(randomAlphaNumeric(10))
         .authenticateAs("test", "test")
         .withWillTopic('willtopic')
         .withWillMessage('My Will message')
@@ -110,7 +110,7 @@ class MQTTManager extends ChangeNotifier {
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');
     });
-    
+
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }

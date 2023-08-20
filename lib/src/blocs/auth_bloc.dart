@@ -4,6 +4,7 @@ import '../fire_base/fire_base_auth.dart';
 
 
 
+
 class AuthBloc {
   var _firAuth = FirAuth();
 

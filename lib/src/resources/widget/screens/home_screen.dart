@@ -6,21 +6,35 @@ import '../../../ServiceMQTT/MQTTManager.dart';
 import 'apps.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key, required this.navigateToFivethPage});
+  const HomeScreen({
+    super.key,
+    required this.navigateToFivethPage,
+    required this.navigateToSecondPageCallback,
+  });
   final VoidCallback navigateToFivethPage;
+  // final VoidCallback navigateToSecondPage;
+  final VoidCallback navigateToSecondPageCallback;
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // void upload(int data) {
-  //   String jsonData = "{\"data\":$data}";
-  //   try {
-  //     _manager.publish(jsonData, "B4E62DB826BD_D");
-  //   } on Exception catch (e) {
-  //     print(e.toString());
-  //   }
-  // }
+  MQTTManager _manager = MQTTManager();
+  void upload(int data) {
+    String jsonData = "{\"data\":$data}";
+    try {
+      _manager.publish(jsonData, "B4E62DB826BD_D");
+    } on Exception catch (e) {
+      print(e.toString());
+    }
+  }
+
+  void initState() {
+    super.initState();
+    // widget.manager.connect(); // Sử dụng widget.manager để truy cập MQTTManager
+
+    _manager.connect(); // Kết nối với MQTT server
+  }
 
   _HomeScreenState() {
     /// Init Alan Button with project key from Alan AI Studio
@@ -33,18 +47,28 @@ class _HomeScreenState extends State<HomeScreen> {
     AlanVoice.onCommand.add((command) {
       debugPrint("got new command ${command.toString()}");
       // Xử lý các lệnh từ Alan AI Studio tại đây
+      switch (command.data['command']) {
+        case "turn 1":
+          upload(1);
+          break;
+        case "turn 2":
+          upload(2);
+          break;
+        case "turn 3":
+          upload(4);
+          break;
+        case "turn 4":
+          upload(8);
+          break;
+        case "turn all":
+          upload(15);
+          break;
+        case "turn off all":
+          upload(0);
+          break;
+      }
       // Dựa vào command để điều khiển các thiết bị trong phòng khách
-      // if (command.data['command'] == 'Turn on the lights in the kitchen') {
-      //   setState(() {
-      //     // Bật đèn trong phòng khách
-      //     upload(1);
-      //   });
-      // } else if (command.data['command'] == 'turn_off_light') {
-      //   setState(() {
-      //     // Tắt đèn trong phòng khách
-      //     upload(0);
-      //   });
-      // }
+
       // Các lệnh khác tương tự
     });
   }
@@ -147,20 +171,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 Positioned(
                   bottom: 0,
                   left: 0,
-                  child: Container(
-                    padding: EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
+                  child: GestureDetector(
+                    onTap: widget.navigateToSecondPageCallback,
+                    child: Container(
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      "Living Room",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      child: Text(
+                        "Living Room",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

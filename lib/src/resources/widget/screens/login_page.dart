@@ -7,6 +7,8 @@ import 'fogot_password_page.dart';
 import 'homepage.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
