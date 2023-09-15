@@ -15,7 +15,6 @@ class FirAuth {
       _onSignUpErr(err.code, onRegisterError);
     });
   }
- 
 
   void signIn(String email, String pass, Function onSuccess,
       Function(String) onSignInError) {
@@ -36,6 +35,10 @@ class FirAuth {
     user["phone"] = phone;
 
     var ref = FirebaseDatabase.instance.reference().child("users");
+    // ref.child("$userId\room\idInside").set("").then((vl) {
+    //   print("on value: SUCCESSED");
+    //   onSuccess();
+    // });
     ref.child(userId).set(user).then((vl) {
       print("on value: SUCCESSED");
       onSuccess();

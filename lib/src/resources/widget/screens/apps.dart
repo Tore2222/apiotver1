@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:iotappver1/src/resources/widget/apps/bedroom.dart';
 import 'package:iotappver1/src/resources/widget/apps/kitchen.dart';
+import 'package:iotappver1/src/resources/widget/apps/room_page.dart';
 import 'package:iotappver1/src/resources/widget/thungrac/livingroom.dart';
 import 'package:iotappver1/src/resources/widget/apps/livingroom.dart';
 import 'package:iotappver1/src/resources/widget/apps/outside.dart';
@@ -10,49 +13,178 @@ import 'package:provider/provider.dart';
 import '../../../ServiceMQTT/MQTTManager.dart';
 
 class Apps extends StatefulWidget {
-   Apps(
-      {required this.navigateToFivethPage,
-      required this.navigateToFirstPage,
-      });
+  Apps({
+    required this.navigateToFivethPage,
+    required this.navigateToFirstPage,
+  });
   final VoidCallback navigateToFirstPage;
   final VoidCallback navigateToFivethPage;
-  
+
   @override
   State<Apps> createState() => _AppsState();
 }
 
 class _AppsState extends State<Apps> with TickerProviderStateMixin {
   late TabController _tabController;
-  late List<Widget> _views; // Declare the variable here
+  List<Widget> _tab = [];
+  List<Widget> _views = []; // Declare the variable here
+  // Declare the variable here
+  String uid = '';
+  int admin = 1;
+  String ChoseHub = ' ';
+  List<Map<String, dynamic>> Room = [];
 
+  DatabaseReference _databaseReference =
+      FirebaseDatabase.instance.reference().child('users');
   MQTTManager _manager = MQTTManager();
+  FirebaseAuth auth = FirebaseAuth.instance;
+
   //MQTTManager get manager => _manager;
+  void updateRoom() {
+    _databaseReference.child('$uid/room${ChoseHub}').onValue.listen((event) {
+      if (event.snapshot != null) {
+        DataSnapshot snapshot = event.snapshot as DataSnapshot;
+        Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
 
-  void ConnectMqtt() {
-    Future.delayed(const Duration(microseconds: 100), () => _manager.connect());
-    Future.delayed(const Duration(seconds: 4),
-        () => _manager.subScribeTo("B4E62DB826BD_U"));
-    print(_manager.currentState.getAppConnectionState);
+        List<Map<String, dynamic>> settings3 = [];
+
+        data.forEach(
+          (key, value) {
+            if (value != null && value is Map<dynamic, dynamic>) {
+              if (value.containsKey('name')) {
+                settings3.add(
+                  {
+                    'name': value['name'].toString(),
+                  },
+                );
+              }
+              ;
+            }
+          },
+        );
+        if (context.mounted) {
+          setState(() {
+            Room = settings3;
+            _tabController = TabController(length: Room.length, vsync: this);
+            _tab = Room.map((room) {
+              return Tab(
+                child: Center(
+                  child: Text(
+                    room['name'],
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              );
+            }).toList();
+            _views = Room.map((room) {
+              return Center(
+                child: RoomPage(
+                    roomName: room['name'],
+                    manager: _manager,
+                    uid: uid,
+                    chosehub: ChoseHub),
+              );
+            }).toList();
+          });
+        }
+      }
+    });
   }
 
-  @override
-  void dispose() {
-    // ignore: todo
-    // TODO: implement dispose
-    Future.delayed(const Duration(microseconds: 300),
-        () => _manager.unSubscribeFromCurrentTopic());
-    Future.delayed(
-        const Duration(microseconds: 600), () => _manager.disconnect());
-    super.dispose();
-  }
+  // void ConnectMqtt() {
+  //   Future.delayed(const Duration(microseconds: 100), () => _manager.connect());
+  //   Future.delayed(
+  //       const Duration(seconds: 4),
+  //       //() => _manager.subScribeTo("B4E62DB826BD_U"));
+  //       () => _manager.subScribeTo("${ChoseHub}_A"));
+  //   print(_manager.currentState.getAppConnectionState);
+  // }
 
   @override
   void initState() {
+    User? user = auth.currentUser;
+    if (user != null && admin == 1) {
+      uid = user.uid;
+      print("User UID: $uid");
+    } else {
+      print("User is not logged in.");
+    }
+    _databaseReference.child('$uid').onValue.listen((event) {
+      try {
+        if (event.snapshot != null) {
+          DataSnapshot snapshot = event.snapshot as DataSnapshot;
+          Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+
+          if (context.mounted) {
+            setState(() {
+              ChoseHub = data['ChoseHub'].toString();
+              updateRoom();
+            });
+          }
+        }
+      } catch (e) {
+        print("Error: $e");
+      }
+    });
+
+    // _databaseReference.child('$uid/room${ChoseHub}').onValue.listen((event) {
+    //   if (event.snapshot != null) {
+    //     DataSnapshot snapshot = event.snapshot as DataSnapshot;
+    //     Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
+
+    //     List<Map<String, dynamic>> settings3 = [];
+
+    //     data.forEach(
+    //       (key, value) {
+    //         if (value != null && value is Map<dynamic, dynamic>) {
+    //           if (value.containsKey('name')) {
+    //             settings3.add(
+    //               {
+    //                 'name': value['name'].toString(),
+    //               },
+    //             );
+    //           }
+    //           ;
+    //         }
+    //       },
+    //     );
+    //     setState(() {
+    //       Room = settings3;
+    //       _tabController = TabController(length: Room.length, vsync: this);
+    //       _tab = Room.map((room) {
+    //         return Tab(
+    //           child: Center(
+    //             child: Text(
+    //               room['name'],
+    //               style: GoogleFonts.poppins(
+    //                 fontWeight: FontWeight.w500,
+    //                 color: Colors.black,
+    //               ),
+    //             ),
+    //           ),
+    //         );
+    //       }).toList();
+    //       _views = Room.map((room) {
+    //         return Center(
+    //           child: RoomPage(
+    //               roomName: room['name'],
+    //               manager: _manager,
+    //               uid: uid,
+    //               chosehub: ChoseHub),
+    //         );
+    //       }).toList();
+    //     });
+    //   }
+    // });
+    // _tabController = TabController(length: Room.length, vsync: this);
     // ignore: todo
     // TODO: implement initState
-    _tabController = TabController(length: 4, vsync: this);  
+
     //_tabController.animateTo(2);
-    ConnectMqtt();
+    //ConnectMqtt();
     // _views = [
     //   Center(
     //       child: LivingRoom(
@@ -76,78 +208,35 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    // ignore: todo
+    // TODO: implement dispose
+    _tabController?.dispose();
+    Future.delayed(const Duration(microseconds: 300),
+        () => _manager.unSubscribeFromCurrentTopic());
+    Future.delayed(
+        const Duration(microseconds: 600), () => _manager.disconnect());
+    super.dispose();
+  }
 
   /// List of Tab Bar Item
-  List<String> items = [
-    "Living Room",
-    "Kitchen",
-    "BedRoom",
-    "OutSide",
-  ];
-  final List<Tab> _tabs = [
-    Tab(
-      child: Center(
-        child: Text("Living Room",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            )),
-      ),
-    ),
-    Tab(
-      child: Center(
-        child: Text("Kitchen",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            )),
-      ),
-    ),
-    Tab(
-      child: Center(
-        child: Text("BedRoom",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            )),
-      ),
-    ),
-    Tab(
-      child: Center(
-        child: Text("OutSide",
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
-            )),
-      ),
-    ),
-  ];
 
   int current = 0;
 
   @override
   Widget build(BuildContext context) {
     // = Provider.of<MQTTManager>(context);
+    //updateRoom();
     // _tabController.index = 1;
-    _views = [
-      Consumer<MQTTManager>(
-        builder: (context, manager, _) {
-          return Center(
-            child: LivingRoom(
-              manager: _manager,
-              state_d1: _manager.currentState.getd1,
-              state_d2: _manager.currentState.getd2,
-              state_d3: _manager.currentState.getd3,
-              state_d4: _manager.currentState.getd4,
-            ),
-          );
-        },
-      ),
-      Center(child: Container()),
-      Center(child: Container()),
-      Center(child: OutSide()),
-    ];
-
+    // _views = Room.map((room) {
+    //   return Center(
+    //     child: RoomPage(
+    //         roomName: room['name'],
+    //         manager: _manager,
+    //         uid: uid,
+    //         chosehub: ChoseHub),
+    //   );
+    // }).toList();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<MQTTManager>.value(
@@ -177,28 +266,28 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
               fontFamily: 'Roboto',
             ),
           ),
-          actions: [
-            InkWell(
-              onTap: () {
-                // Xử lý khi người dùng nhấp vào hình ảnh
-                // Chuyển sang một trang khác
-                widget.navigateToFivethPage();
-              },
-              child: CircleAvatar(
-                child: Container(
-                  height: 70,
-                  width: 70,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(90),
-                    color: Colors.white,
-                  ),
-                  padding: EdgeInsets.all(5),
-                  child: Image.asset("assets/images/person.png",
-                      fit: BoxFit.contain),
-                ),
-              ),
-            ),
-          ],
+          // actions: [
+          //   InkWell(
+          //     onTap: () {
+          //       // Xử lý khi người dùng nhấp vào hình ảnh
+          //       // Chuyển sang một trang khác
+          //       widget.navigateToFivethPage();
+          //     },
+          //     child: CircleAvatar(
+          //       child: Container(
+          //         height: 70,
+          //         width: 70,
+          //         decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(90),
+          //           color: Colors.white,
+          //         ),
+          //         padding: EdgeInsets.all(5),
+          //         child: Image.asset("assets/images/person.png",
+          //             fit: BoxFit.contain),
+          //       ),
+          //     ),
+          //   ),
+          // ],
         ),
 
         ///Điện năng tiêu thụ
@@ -257,10 +346,10 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Row(
+                              Row(
                                 children: [
                                   Text(
-                                    '3000',
+                                    "3000",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 28,
@@ -301,7 +390,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                 width: double.infinity,
                 height: 500,
                 child: DefaultTabController(
-                  length: items.length,
+                  length: Room.length,
                   child: Scaffold(
                     body: Column(
                       children: [
@@ -309,8 +398,37 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                           scrollDirection: Axis.horizontal,
                           child: TabBar(
                             controller: _tabController,
-                            tabs: _tabs,
                             isScrollable: true,
+                            tabs: _tab,
+                            onTap: (index) {
+                              setState(() {
+                                current = index;
+                                _tabController.animateTo(
+                                    index); // Update selected room index
+                                _tab = Room.map((room) {
+                                  return Tab(
+                                    child: Center(
+                                      child: Text(
+                                        room['name'],
+                                        style: GoogleFonts.poppins(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList();
+                                _views = Room.map((room) {
+                                  return Center(
+                                    child: RoomPage(
+                                        roomName: room['name'],
+                                        manager: _manager,
+                                        uid: uid,
+                                        chosehub: ChoseHub),
+                                  );
+                                }).toList();
+                              });
+                            },
                             // Add more properties if needed
                           ),
                         ),

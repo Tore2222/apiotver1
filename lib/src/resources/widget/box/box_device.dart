@@ -103,15 +103,22 @@ class _DeviceBoxState extends State<DeviceBox> {
               if (isPressed)
                 Container(
                   width: 70,
-                  height: 30,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Color.fromARGB(240, 233, 0, 0),
+                  height: 40,
+                  child: GestureDetector(
+                    onTap: widget.onDelete,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.delete,
+                          color: Color.fromARGB(240, 233, 0, 0),
+                          size: 24,
+                        ),
+                      ),
                     ),
-                    iconSize: 30,
-                    color: Color.fromARGB(199, 229, 15, 15),
-                    onPressed: widget.onDelete,
                   ),
                 )
             ],

@@ -13,6 +13,10 @@ class MQTTManager extends ChangeNotifier {
   final MqttServerClient _client =
       MqttServerClient.withPort('broker.hivemq.com', 'flutter_test', 1883);
   String _topic = "";
+  
+  ValueChanged<String>? onMessageReceived;
+
+  MQTTManager({ValueChanged<String>? onMessageReceived}) : this.onMessageReceived = onMessageReceived;
 
   void initializeMQTTClient() {
     // Save the values
@@ -109,6 +113,9 @@ class MQTTManager extends ChangeNotifier {
       print(
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');
+       if (onMessageReceived != null) {
+        onMessageReceived!(pt);
+      }
     });
 
     print(

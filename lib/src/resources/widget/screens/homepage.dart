@@ -71,21 +71,14 @@ class _HomePageState extends State<HomePage> {
                 Icons.grid_3x3,
                 size: 20,
               ),
-              title: Text("Apps"),
+              title: Text("Control"),
             ),
             SalomonBottomBarItem(
               icon: Icon(
                 Icons.add,
                 size: 20,
               ),
-              title: Text("Add"),
-            ),
-            SalomonBottomBarItem(
-              icon: Icon(
-                Icons.notifications,
-                size: 20,
-              ),
-              title: Text("Notifi"),
+              title: Text("Config"),
             ),
             SalomonBottomBarItem(
               icon: Icon(
@@ -99,16 +92,12 @@ class _HomePageState extends State<HomePage> {
         body: IndexedStack(
           index: _currentIndex,
           children: [
-            HomeScreen(
-              navigateToFivethPage: navigateToFivethPage,
-              navigateToSecondPageCallback: navigateToSecondPage,
-            ),
-            Apps(
-                navigateToFivethPage: navigateToFivethPage,
-                navigateToFirstPage: navigateToFirstPage,
-                ),
-            ConfigWifiPage(),
             TestScreen(),
+            Apps(
+              navigateToFivethPage: navigateToFivethPage,
+              navigateToFirstPage: navigateToFirstPage,
+            ),
+            ConfigWifiPage(),
             ProfilePage(),
           ],
         ),

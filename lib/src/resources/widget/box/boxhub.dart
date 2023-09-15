@@ -5,11 +5,15 @@ class HubBox extends StatefulWidget {
     required this.title,
     required this.onLongPress,
     required this.onDelete,
+    required this.doubleTab,
+    required this.isSelected,
   });
 
   final String title;
   final VoidCallback onLongPress;
+  final VoidCallback doubleTab;
   final VoidCallback onDelete;
+  final bool isSelected;
 
   @override
   _HubBoxState createState() => _HubBoxState();
@@ -17,12 +21,24 @@ class HubBox extends StatefulWidget {
 
 class _HubBoxState extends State<HubBox> {
   bool isPressed = false;
+  Color myColor = Colors.white;
+  bool doubletab = false;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
     return GestureDetector(
+      onTap: () {
+        setState(() {
+          doubletab = !doubletab;
+          if (doubletab == true) {
+            widget.doubleTab();
+          }
+
+          myColor = doubletab ? Colors.blue : Colors.white;
+        });
+      },
       onLongPressUp: () {
         setState(() {
           isPressed = true;
@@ -41,7 +57,7 @@ class _HubBoxState extends State<HubBox> {
           width: width / 2.5,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: widget.isSelected ? Colors.blue : Colors.white,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -71,15 +87,22 @@ class _HubBoxState extends State<HubBox> {
               if (isPressed)
                 Container(
                   width: 70,
-                  height: 10,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.delete,
-                      color: Color.fromARGB(240, 233, 0, 0),
+                  height: 40,
+                  child: GestureDetector(
+                    onTap: widget.onDelete,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: widget.isSelected ? Colors.blue : Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Center(
+                        child: Icon(
+                          Icons.delete,
+                          color: Color.fromARGB(240, 233, 0, 0),
+                          size: 24,
+                        ),
+                      ),
                     ),
-                    iconSize: 20,
-                    color: Color.fromARGB(199, 229, 15, 15),
-                    onPressed: widget.onDelete,
                   ),
                 )
             ],

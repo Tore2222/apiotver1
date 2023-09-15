@@ -88,7 +88,7 @@ class _LivingRoomState extends State<LivingRoom> {
   void upload(int data) {
     String jsonData = "{\"data\":$data}";
     try {
-      widget.manager.publish(jsonData, "B4E62DB826BD_D");
+      widget.manager.publish(jsonData, "94B5552C6778_D");
     } on Exception catch (e) {
       print(e.toString());
     }
