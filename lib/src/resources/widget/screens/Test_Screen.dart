@@ -38,6 +38,7 @@ class _TestScreenState extends State<TestScreen> {
   String uid = '';
   int admin = 1;
   String ChoseHub = '';
+
   String NameChoseHub = '';
   int selectedHubIndex = -1;
   String name = '';
@@ -45,19 +46,24 @@ class _TestScreenState extends State<TestScreen> {
   void uploadDevice(String data) {
     String jsonData = "{\"idDevice\":$data}";
     try {
-      _manager.publish(jsonData, "94B5552C6778_D");
+      _manager.publish(jsonData, "94B5552C6778_D_0000");
     } on Exception catch (e) {
       print(e.toString());
     }
   }
 
-  void upload(int data) {
-    String jsonData = "{\"data\":$data}";
-    try {
-      _manager.publish(jsonData, "94B5552C6778_D");
-    } on Exception catch (e) {
-      print(e.toString());
-    }
+  
+
+  void ConnectMqtt() {
+    // Future.delayed(
+    //     const Duration(microseconds: 100), () => widget.manager.connect());
+    Future.delayed(const Duration(seconds: 1),
+        () => _manager.subScribeTo("94B5552C6778_A_0000")
+
+        // widget.manager.subScribeTo("94B5552C6778_A_0001");
+        // widget.manager.subScribeTo("94B5552C6778_A_0002");
+        );
+    print("Quyeefn11 : ${_manager.currentState.getidDevice}");
   }
 
   void updateRoomList() {
@@ -126,7 +132,19 @@ class _TestScreenState extends State<TestScreen> {
   @override
   void initState() {
     _manager.connect();
-    super.initState();
+    ConnectMqtt();
+    _manager.onMessageReceived = (message) {
+      // Gọi setState để cập nhật trang
+      //print("Quyền : $message");
+      // print("Quyền : ${widget.manager.topic}");
+
+      setState(() {
+        String topic = _manager.topic;
+        print("Quyeefn11 : $message");
+        print("Quyền11 : ${_manager.currentState.getidDevice}");
+      });
+    }; // print("Quyền : -- ${widget.manager.currentState.getd1}");
+
     User? user = auth.currentUser;
     if (user != null && admin == 1) {
       uid = user.uid;
@@ -142,7 +160,7 @@ class _TestScreenState extends State<TestScreen> {
     //     setState(() {});
     //   }
     // });
-
+    ChoseHub = Provider.of<AppData>(context, listen: false).ChoseHub;
     _databaseReference.child('$uid/hub').onValue.listen((event) {
       if (event.snapshot != null) {
         DataSnapshot snapshot = event.snapshot as DataSnapshot;
@@ -205,7 +223,7 @@ class _TestScreenState extends State<TestScreen> {
         });
       }
     });
-    _databaseReference.child('$uid/room${ChoseHub}').onValue.listen((event) {
+    _databaseReference.child('$uid/room$ChoseHub').onValue.listen((event) {
       if (event.snapshot != null) {
         DataSnapshot snapshot = event.snapshot as DataSnapshot;
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
@@ -231,44 +249,9 @@ class _TestScreenState extends State<TestScreen> {
         });
       }
     });
-    
+    super.initState();
   }
-  _TestScreenState() {
-      /// Init Alan Button with project key from Alan AI Studio
-      AlanVoice.addButton(
-          "112d58930d9579f9430a22fe21297be42e956eca572e1d8b807a3e2338fdd0dc/stage");
-      buttonAlign:
-      AlanVoice.BUTTON_ALIGN_LEFT;
 
-      /// Handle commands from Alan AI Studio
-      AlanVoice.onCommand.add((command) {
-        debugPrint("got new command ${command.toString()}");
-        // Xử lý các lệnh từ Alan AI Studio tại đây
-        switch (command.data['command']) {
-          case "turn 1":
-            upload(1);
-            break;
-          case "turn 2":
-            upload(2);
-            break;
-          case "turn 3":
-            upload(4);
-            break;
-          case "turn 4":
-            upload(8);
-            break;
-          case "turn all":
-            upload(15);
-            break;
-          case "turn off all":
-            upload(0);
-            break;
-        }
-        // Dựa vào command để điều khiển các thiết bị trong phòng khách
-
-        // Các lệnh khác tương tự
-      });
-    }
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +273,7 @@ class _TestScreenState extends State<TestScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/icon Smart Home.png",
+                    "assets/images/smart-house.png",
                     width: 40,
                     height: 40,
                     fit: BoxFit.fill,
@@ -325,10 +308,6 @@ class _TestScreenState extends State<TestScreen> {
                       }
                     },
                   ),
-                  const Spacer(),
-                  Container(
-                    child: AddButton(),
-                  )
                 ],
               ),
             ),
@@ -536,15 +515,17 @@ class _TestScreenState extends State<TestScreen> {
                               );
                               if (ChoseHub != '') {
                                 uploadDevice(jsonDataCam['device']);
-                                await Future.delayed(Duration(seconds: 15));
-                                _manager.currentState.getidDevice;
+                                await Future.delayed(Duration(seconds: 8));
+                                print(
+                                    "Quyền11: ${_manager.currentState.getidDevice}");
 
-                                if (_manager.currentState.getidDevice ==
-                                    "accept") {
+                                if (_manager.currentState.getidDevice != "") {
                                   if (jsonDataCam['device'] != null &&
                                       jsonDataCam['device'].isNotEmpty &&
                                       jsonDataCam['type'] != null &&
                                       jsonDataCam['type'].isNotEmpty) {
+                                    Provider.of<AppData>(context, listen: false)
+                                        .setlengthDevice(Device.length + 1);
                                     _databaseReference
                                         .child(
                                             '$uid/device/id${jsonDataCam['device']}/idHub')
@@ -565,6 +546,12 @@ class _TestScreenState extends State<TestScreen> {
                                         .child(
                                             '$uid/device/id${jsonDataCam['device']}/name')
                                         .set('Device ${Device.length}');
+                                    _databaseReference
+                                        .child(
+                                            '$uid/device/id${jsonDataCam['device']}/panID')
+                                        .set(
+                                            "${(Device.length + 3).toString().padLeft(4, '0')}");
+
                                     //   }
                                     // }
 
@@ -762,6 +749,7 @@ class _TestScreenState extends State<TestScreen> {
                                                   .child(
                                                       '$uid/room/id${newTitle}/idHub')
                                                   .set(ChoseHub);
+                                              setState(() {});
                                             } else {
                                               MsgDialog.showMsgDialog1(
                                                   context, "Chose hub first");
@@ -800,7 +788,7 @@ class _TestScreenState extends State<TestScreen> {
                                     TextEditingController newTitleController =
                                         TextEditingController();
                                     return AlertDialog(
-                                      title: const Text('Change Name Hub'),
+                                      title: const Text('Change Name Room'),
                                       content: TextField(
                                         controller: newTitleController,
                                       ),
@@ -830,7 +818,7 @@ class _TestScreenState extends State<TestScreen> {
                                               // Update the hub title in your database or state management logic
                                               _databaseReference
                                                   .child(
-                                                      '$uid/hub/id${Hub[i]['mac']}/name')
+                                                      '$uid/room$ChoseHub/id${Room[i]['name']}/name')
                                                   .set(newTitle);
 
                                               Navigator.of(context)
@@ -847,9 +835,14 @@ class _TestScreenState extends State<TestScreen> {
                                 if (Room[i]['name'] != "InSide" &&
                                     Room[i]['name'] != "OutSide") {
                                   _databaseReference
+                                      .child(
+                                          '$uid/room$ChoseHub/id${Room[i]['name']}')
+                                      .remove();
+                                  _databaseReference
                                       .child('$uid/room/id${Room[i]['name']}')
                                       .remove();
-
+                                  // MsgDialog.showMsgDialog1(
+                                  //     context, "$uid/id${Room[i]['name']}");
                                   setState(() {});
                                 } else {
                                   MsgDialog.showMsgDialog1(

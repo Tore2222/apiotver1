@@ -17,11 +17,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   runApp(
-     ChangeNotifierProvider(
+    ChangeNotifierProvider(
       create: (context) => AppData(),
-      child:  Myapp(
-      // new AuthBloc(),
-      const MaterialApp(home: HomePage())),
-    ),);
+      child: Myapp(
+          // new AuthBloc(),
+          const MaterialApp(home: HomePage())),
+    ),
+  );
 }

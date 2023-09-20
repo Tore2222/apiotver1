@@ -102,9 +102,17 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
   //       () => _manager.subScribeTo("${ChoseHub}_A"));
   //   print(_manager.currentState.getAppConnectionState);
   // }
+  void ConnectMqtt() {
+    // Future.delayed(
+    //     const Duration(microseconds: 100), () => widget.manager.connect());
+    Future.delayed(const Duration(seconds: 1),
+        () => _manager.subScribeTo("${ChoseHub}_A_0000}"));
+  }
 
   @override
   void initState() {
+    _manager.connect();
+
     User? user = auth.currentUser;
     if (user != null && admin == 1) {
       uid = user.uid;
@@ -129,80 +137,8 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
         print("Error: $e");
       }
     });
-
-    // _databaseReference.child('$uid/room${ChoseHub}').onValue.listen((event) {
-    //   if (event.snapshot != null) {
-    //     DataSnapshot snapshot = event.snapshot as DataSnapshot;
-    //     Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-
-    //     List<Map<String, dynamic>> settings3 = [];
-
-    //     data.forEach(
-    //       (key, value) {
-    //         if (value != null && value is Map<dynamic, dynamic>) {
-    //           if (value.containsKey('name')) {
-    //             settings3.add(
-    //               {
-    //                 'name': value['name'].toString(),
-    //               },
-    //             );
-    //           }
-    //           ;
-    //         }
-    //       },
-    //     );
-    //     setState(() {
-    //       Room = settings3;
-    //       _tabController = TabController(length: Room.length, vsync: this);
-    //       _tab = Room.map((room) {
-    //         return Tab(
-    //           child: Center(
-    //             child: Text(
-    //               room['name'],
-    //               style: GoogleFonts.poppins(
-    //                 fontWeight: FontWeight.w500,
-    //                 color: Colors.black,
-    //               ),
-    //             ),
-    //           ),
-    //         );
-    //       }).toList();
-    //       _views = Room.map((room) {
-    //         return Center(
-    //           child: RoomPage(
-    //               roomName: room['name'],
-    //               manager: _manager,
-    //               uid: uid,
-    //               chosehub: ChoseHub),
-    //         );
-    //       }).toList();
-    //     });
-    //   }
-    // });
-    // _tabController = TabController(length: Room.length, vsync: this);
-    // ignore: todo
-    // TODO: implement initState
-
-    //_tabController.animateTo(2);
-    //ConnectMqtt();
-    // _views = [
-    //   Center(
-    //       child: LivingRoom(
-    //     manager: _manager,
-    //     state_d1: _manager.currentState.getd1,
-    //     state_d2: _manager.currentState.getd2,
-    //     state_d3: _manager.currentState.getd3,
-    //     state_d4: _manager.currentState.getd4,
-    //   )),
-    //   Center(child: Container()),
-    //   Center(child: Container()),
-    // ];
-    //   Center(child: Container()),
-
-    //   // Center(child: const Kitchen()),
-    //   // Center(child: const BedRoom()),
-    //   // Center(child: const OutSide()),
-    // ];
+    ConnectMqtt();
+  
 
     super.initState();
   }
@@ -323,8 +259,8 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                           Padding(
                             padding: EdgeInsets.only(left: 20),
                             child: Container(
-                              width: 70,
-                              height: 70,
+                              width: 65,
+                              height: 65,
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 borderRadius: BorderRadius.circular(90),
@@ -332,15 +268,15 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                               child: Center(
                                 child: Image.asset(
                                   'assets/images/ic_electric.png',
-                                  width: 70,
-                                  height: 70,
+                                  width: 50,
+                                  height: 50,
                                   fit: BoxFit.contain,
                                 ),
                               ),
                             ),
                           ),
                           const SizedBox(
-                            width: 30,
+                            width: 20,
                           ),
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -349,10 +285,57 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                               Row(
                                 children: [
                                   Text(
-                                    "3000",
+                                    "Temp : ",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 28,
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                  Text(
+                                   // "${_manager.currentState.gettemp} °C ",
+                                    "31 °C ",
+
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                  Text(
+                                    "Humi : ",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                  Text(
+                                    // "${_manager.currentState.gethum} %",
+                                    "83 % ",
+
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: Colors.black,
+                                      fontFamily: 'Roboto',
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "30",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                       color: Colors.black,
                                       fontFamily: 'Roboto',
                                     ),
@@ -362,19 +345,22 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                                     'kWh',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 28,
+                                      fontSize: 20,
                                       color: Colors.black,
                                       fontFamily: 'Roboto',
                                     ),
                                   ),
                                 ],
                               ),
+                              SizedBox(
+                                height: 5,
+                              ),
                               Text(
                                 'Power usage today',
                                 style: GoogleFonts.poppins(
                                   fontWeight: FontWeight.w700,
-                                  fontSize: 14,
-                                  color: Colors.black54,
+                                  fontSize: 15,
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -384,7 +370,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
               SizedBox(
                 width: double.infinity,

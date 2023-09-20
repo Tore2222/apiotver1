@@ -24,14 +24,14 @@ class _DeviceBoxState extends State<DeviceBox> {
   String getImagePath(String key) {
     switch (key) {
       case 'light':
-        return 'assets/images/Light.png';
+        return 'assets/images/smart-light).png';
       case 'fan':
-        return 'assets/images/Fan Speed.png';
+        return 'assets/images/fan.png';
       case 'TVremote':
-        return 'assets/images/6.webp';
+        return 'assets/images/remote-control.png';
       // Add more cases as needed
       default:
-        return 'assets/images/Default.png';
+        return 'assets/images/motherboard.png';
     }
   }
 

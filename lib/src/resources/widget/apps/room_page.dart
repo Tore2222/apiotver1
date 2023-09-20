@@ -1,3 +1,4 @@
+import 'package:alan_voice/alan_voice.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:iotappver1/src/ServiceMQTT/variable_app.dart';
@@ -26,268 +27,94 @@ class _RoomPageState extends State<RoomPage> {
       FirebaseDatabase.instance.reference().child('users');
 
   List<Map<String, dynamic>> Device = [];
-  List<bool> dStates = [];
-  late bool state_d1;
-  late bool state_d2;
-  late bool state_d3;
-  late bool state_d4;
-  late bool state_d5;
-  late bool state_d6;
-  late bool state_d7;
-  late bool state_d8;
-  late bool state_d9;
-  late bool state_d10;
-  late bool state_d11;
-  late bool state_d12;
-  late bool state_d13;
-  late bool state_d14;
-  late bool state_d15;
+        List<Map<String, dynamic>> settings3 = [];
+        List<Map<String, dynamic>> settings2 = [];
 
-  void toggle_d1() {
-    //setState(() {
-    state_d1 = !state_d1;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d2() {
-    // setState(() {
-    state_d2 = !state_d2;
-    // });
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d3() {
-    //setState(() {
-    state_d3 = !state_d3;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    //  _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d4() {
-    //setState(() {
-    state_d4 = !state_d4;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d5() {
-    //setState(() {
-    state_d5 = !state_d5;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d6() {
-    // setState(() {
-    state_d6 = !state_d6;
-    // });
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d7() {
-    //setState(() {
-    state_d7 = !state_d7;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    //  _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d8() {
-    //setState(() {
-    state_d8 = !state_d8;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d9() {
-    //setState(() {
-    state_d9 = !state_d9;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d10() {
-    //setState(() {
-    state_d10 = !state_d10;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d11() {
-    //setState(() {
-    state_d11 = !state_d11;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d12() {
-    //setState(() {
-    state_d12 = !state_d12;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d13() {
-    //setState(() {
-    state_d13 = !state_d13;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d14() {
-    //setState(() {
-    state_d14 = !state_d14;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
-  }
-
-  void toggle_d15() {
-    //setState(() {
-    state_d15 = !state_d15;
-    //});
-    print(get_data_device());
-    upload(get_data_device());
-    // _manager.publish(parse_json_data(get_data_device()),"test");
+  late List<List<bool>> allStates =
+      List.generate(3+Provider.of<AppData>(context, listen: false).lengthDevice +5, (index) => List.filled(11, false));
+  // late List<List<bool>> allStates = List.generate(
+  //     Provider.of<AppData>(context, listen: false).lengthDevice + 2,
+  //     (index) => List.filled(11, false));
+  // late List<List<bool>> allStates;
+  void toggle_d(int j, int i) {
+    allStates[j][i] = !allStates[j][i];
+    print(get_data_device(j));
+    upload(get_data_device(j), j);
   }
 
   // ignore: non_constant_identifier_names
-  int get_data_device() {
+  int get_data_device(int j) {
     int data = 0;
-    if (state_d1) {
-      data += 1;
-    } else {
-      data += 0;
-    }
-    if (state_d2) {
-      data += 2;
-    } else {
-      data += 0;
-    }
-    if (state_d3) {
-      data += 4;
-    } else {
-      data += 0;
-    }
-    if (state_d4) {
-      data += 8;
-    } else {
-      data += 0;
-    }
-    if (state_d5) {
-      data += 16;
-    } else {
-      data += 0;
-    }
-    if (state_d6) {
-      data += 32;
-    } else {
-      data += 0;
-    }
-    if (state_d7) {
-      data += 64;
-    } else {
-      data += 0;
-    }
-    if (state_d8) {
-      data += 128;
-    } else {
-      data += 0;
-    }
-    if (state_d9) {
-      data += 256;
-    } else {
-      data += 0;
-    }
-    if (state_d10) {
-      data += 512;
-    } else {
-      data += 0;
-    }
-    if (state_d11) {
-      data += 1024;
-    } else {
-      data += 0;
-    }
-    if (state_d12) {
-      data += 2048;
-    } else {
-      data += 0;
-    }
-    if (state_d13) {
-      data += 4096;
-    } else {
-      data += 0;
-    }
-    if (state_d14) {
-      data += 8192;
-    } else {
-      data += 0;
-    }
-    if (state_d15) {
-      data += 16384;
-    } else {
-      data += 0;
+    for (int i = 0; i < allStates[j].length; i++) {
+      if (allStates[j][i]) {
+        data += (1 << i);
+      }
     }
     return data;
   }
 
-  void upload(int data) {
+  void upload(int data, int j) {
     String jsonData = "{\"data\":$data}";
     try {
-      widget.manager.publish(jsonData, "${widget.chosehub}_D");
+      print("Quyefne1 :${widget.chosehub}_D_${j.toString().padLeft(4, '0')}");
+      widget.manager.publish(
+          jsonData, "${widget.chosehub}_D_${j.toString().padLeft(4, '0')}");
     } on Exception catch (e) {
       print(e.toString());
     }
   }
 
   void ConnectMqtt() {
-    Future.delayed(
-        const Duration(microseconds: 100), () => widget.manager.connect());
-    Future.delayed(
-        const Duration(seconds: 4),
+    // Future.delayed(
+    //     const Duration(microseconds: 100), () => widget.manager.connect());
+    Future.delayed(const Duration(seconds: 1),
         //() => _manager.subScribeTo("B4E62DB826BD_U"));
-        () => widget.manager.subScribeTo("94B5552C6778_A"));
-    print("Quyền : ${widget.manager.currentState.getd1}");
+        () {
+      // widget.manager.subScribeTo("94B5552C6778_A_0001");
+      // widget.manager.subScribeTo("94B5552C6778_A_0002");
+      for (int i = 0;
+          i <= (Provider.of<AppData>(context, listen: false).lengthDevice + 5);
+          i++) {
+        widget.manager.subScribeTo("94B5552C6778_A_000$i");
+      }
+    });
+
+// Future.delayed(
+//     const Duration(seconds: 4),
+//     () {
+//        widget.manager.subScribeTo("94B5552C6778_A"); // Thay thế "topic1" bằng tên thực tế của topic
+//       // widget.manager.subScribeTo("94B5552C6778_A_B"); // Thay thế "topic3" bằng tên thực tế của topic
+//       //  widget.manager.subScribeTo("94B5552C6778_A_C");
+//     },
+//   );
+    print("Quyền : ${widget.manager.currentState.getD(1)}");
   }
 
   @override
   void initState() {
     widget.manager.connect();
-
+    // allStates = List.generate(
+    //     Provider.of<AppData>(context, listen: false).lengthDevice + 2,
+    //     (index) => List.filled(11, false),
+    //   );
     // Subscribe to the MQTT topic
     ConnectMqtt();
+    widget.manager.onMessageReceived = (message) {
+      // Gọi setState để cập nhật trang
+      //print("Quyền : $message");
+      // print("Quyền : ${widget.manager.topic}");
 
-    // Listen for incoming MQTT messages
+      setState(() {
+        String topic = widget.manager.topic;
+        print("Quyền : ${topic[topic.length - 1]}");
+
+        for (int i = 0; i < 11; i++) {
+          allStates[int.parse(topic[topic.length - 1])][i] =
+              widget.manager.currentState.getD(i);
+        }
+        // print("Quyền : -- ${widget.manager.currentState.getd1}");
+      });
+    };
 
     // Sử dụng widget.manager để truy cập MQTTManager
     _databaseReference.child('${widget.uid}/ChoseHub').onValue.listen((event) {
@@ -302,7 +129,7 @@ class _RoomPageState extends State<RoomPage> {
       if (event.snapshot != null) {
         DataSnapshot snapshot = event.snapshot as DataSnapshot;
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-        List<Map<String, dynamic>> settings3 = [];
+         settings3 = [];
         data.forEach(
           (key, value) {
             if (value != null && value is Map<dynamic, dynamic>) {
@@ -312,7 +139,9 @@ class _RoomPageState extends State<RoomPage> {
                     'type': value['type'].toString(),
                     'mac': value['mac'].toString(),
                     'name': value['name'].toString(),
-                    'location': value['location'].toString()
+                    'location': value['location'].toString(),
+                    'panID': value['panID'].toString(),
+                    'status': value['status'].toString()
                   },
                 );
               }
@@ -321,55 +150,21 @@ class _RoomPageState extends State<RoomPage> {
           },
         );
         Device = [];
+        settings3.sort((a, b) => a['mac'].compareTo(b['mac']));
         Provider.of<AppData>(context, listen: false)
             .setlengthDevice1(settings3.length);
-        print("QUYEN: ${settings3[3]['name']}");
+
         Device.addAll(settings3);
+        print(
+            "Quyeenf1 :${(Device[0]['panID'])[(Device[0]['panID']).length - 1]}");
       }
     });
-    widget.manager.onMessageReceived = (message) {
-      // Gọi setState để cập nhật trang
-      print('Quyền1 : $message');
-      setState(() {
-        
-        state_d1 = widget.manager.currentState.getd1;
-        state_d2 = widget.manager.currentState.getd2;
-        state_d3 = widget.manager.currentState.getd3;
-        state_d4 = widget.manager.currentState.getd4;
-        state_d5 = widget.manager.currentState.getd5;
-        state_d6 = widget.manager.currentState.getd6;
-        state_d7 = widget.manager.currentState.getd7;
-        state_d8 = widget.manager.currentState.getd8;
-        state_d9 = widget.manager.currentState.getd9;
-        state_d10 = widget.manager.currentState.getd10;
-        state_d11 = widget.manager.currentState.getd11;
-        state_d12 = widget.manager.currentState.getd12;
-        state_d13 = widget.manager.currentState.getd13;
-        state_d14 = widget.manager.currentState.getd14;
-        state_d15 = widget.manager.currentState.getd15;
-      });
-    };
-    state_d1 = widget.manager.currentState.getd1;
-    state_d2 = widget.manager.currentState.getd2;
-    state_d3 = widget.manager.currentState.getd3;
-    state_d4 = widget.manager.currentState.getd4;
-    state_d5 = widget.manager.currentState.getd5;
-    state_d6 = widget.manager.currentState.getd6;
-    state_d7 = widget.manager.currentState.getd7;
-    state_d8 = widget.manager.currentState.getd8;
-    state_d9 = widget.manager.currentState.getd9;
-    state_d10 = widget.manager.currentState.getd10;
-    state_d11 = widget.manager.currentState.getd11;
-    state_d12 = widget.manager.currentState.getd12;
-    state_d13 = widget.manager.currentState.getd13;
-    state_d14 = widget.manager.currentState.getd14;
-    state_d15 = widget.manager.currentState.getd15;
 
     _databaseReference.child('${widget.uid}/device').onValue.listen((event) {
       if (event.snapshot != null) {
         DataSnapshot snapshot = event.snapshot as DataSnapshot;
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-        List<Map<String, dynamic>> settings2 = [];
+        settings2 = [];
         data.forEach(
           (key, value) {
             if (value != null && value is Map<dynamic, dynamic>) {
@@ -377,7 +172,8 @@ class _RoomPageState extends State<RoomPage> {
                   value.containsKey('name') &&
                   value.containsKey('location') &&
                   value.containsKey('type') &&
-                  value.containsKey('idHub')) {
+                  value.containsKey('idHub') &&
+                  value.containsKey('panID')) {
                 if (value["idHub"] == widget.chosehub &&
                     value["location"] == widget.roomName) {
                   settings2.add(
@@ -385,7 +181,9 @@ class _RoomPageState extends State<RoomPage> {
                       'type': value['type'].toString(),
                       'mac': value['mac'].toString(),
                       'name': value['name'].toString(),
-                      'location': value['location'].toString()
+                      'location': value['location'].toString(),
+                      'panID': value['panID'].toString(),
+                    'status': value['status'].toString()
                     },
                   );
                 }
@@ -396,66 +194,52 @@ class _RoomPageState extends State<RoomPage> {
         );
 
         Device.addAll(settings2);
-        Provider.of<AppData>(context, listen: false)
-            .setlengthDevice1(settings2.length);
+        for (int i = 0; i < Device.length; i++) {
+          print("QUYỀN : ${Device[i]['name']}");
+        }
+        // Provider.of<AppData>(context, listen: false)
+        //     .setlengthDevice1(settings2.length);
       }
     });
-
+  
     super.initState();
+  }
+  
+  _RoomPageState() {
+    /// Init Alan Button with project key from Alan AI Studio
+    AlanVoice.addButton(
+        "112d58930d9579f9430a22fe21297be42e956eca572e1d8b807a3e2338fdd0dc/stage");
+    buttonAlign:
+    AlanVoice.BUTTON_ALIGN_LEFT;
+
+    /// Handle commands from Alan AI Studio
+    AlanVoice.onCommand.add((command) {
+      debugPrint("got new command ${command.toString()}");
+      // Xử lý các lệnh từ Alan AI Studio tại đây
+      switch (command.data['command']) {
+        case 'open the door':
+          upload(2,2);
+          break;
+        case 'open the light in the kitchen':
+          upload(4,2);
+          break;
+        case 'open the light in the bedroom':
+          upload(8,2);
+          break;
+        case 'open the fan in the bedroom':
+          upload(1,2);
+          break;
+        
+      }
+      // Dựa vào command để điều khiển các thiết bị trong phòng khách
+
+      // Các lệnh khác tương tự
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<void Function()> toggleFunctions = [
-      () => toggle_d1(),
-      () => toggle_d2(),
-      () => toggle_d3(),
-      () => toggle_d4(),
-      () => toggle_d5(),
-      () => toggle_d6(),
-      () => toggle_d7(),
-      () => toggle_d8(),
-      () => toggle_d9(),
-      () => toggle_d10(),
-      () => toggle_d11(),
-      () => toggle_d12(),
-      () => toggle_d13(),
-      () => toggle_d14(),
-      () => toggle_d15(),
-      ()=>{},
-      ()=>{},  
-      ()=>{},  
-      ()=>{},  
-      ()=>{},  
-
-
-    ];
-    List stateFunctions = [
-      state_d1,
-      state_d2,
-      state_d3,
-      state_d4,
-      state_d5,
-      state_d6,
-      state_d7,
-      state_d8,
-      state_d9,
-      state_d10,
-      state_d11,
-      state_d12,
-      state_d13,
-      state_d14,
-      state_d15,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-      true,
-     
-    ];
 
     return Scaffold(
       body: Container(
@@ -468,28 +252,30 @@ class _RoomPageState extends State<RoomPage> {
                 child: Wrap(spacing: 20, runSpacing: 30, children: [
                   for (int i = 0; i < Device.length; i++)
                     CustomCard(
-                      size: size,
-                      icon: Icon(
-                        Icons.home_outlined,
-                        size: 55,
-                        color: Colors.grey.shade400,
-                      ),
-                      title: Device[i]['name'],
-                      statusOn: Device[i]['name'] == "Cổng" ||
-                              Device[i]['name'] == "Cửa Cuốn"
-                          ? "OPEN"
-                          : "ON",
-                      statusOff: Device[i]['name'] == "Cổng" ||
-                              Device[i]['name'] == "Cửa Cuốn"
-                          ? "LOCKED"
-                          : "OFF",
-                      isChecked: widget.roomName == "InSide"
-                          ? stateFunctions[i + 4]
-                          : stateFunctions[i],
-                      toggle: widget.roomName == "InSide"
-                          ? toggleFunctions[i + 4]
-                          : toggleFunctions[i],
-                    ),
+                        size: size,
+                        icon: Icon(
+                          Icons.home_outlined,
+                          size: 55,
+                          color: Colors.grey.shade400,
+                        ),
+                        title: Device[i]['name'],
+                        statusOn: Device[i]['name'] == "Cổng" ||
+                                Device[i]['name'] == "Cửa Cuốn"
+                            ? "OPEN"
+                            : "ON",
+                        statusOff: Device[i]['name'] == "Cổng" ||
+                                Device[i]['name'] == "Cửa Cuốn"
+                            ? "LOCKED"
+                            : "OFF",
+                        isChecked: i>(settings3.length-1)?allStates[int.parse((Device[i]
+                            ['panID'])[(Device[i]['panID']).length - 1])][0]: allStates[int.parse((Device[i]
+                            ['panID'])[(Device[i]['panID']).length - 1])][i],
+                        toggle:i>(settings3.length-1)? () => toggle_d(
+                            int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1]),
+                            0): () => toggle_d(
+                            int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1]),
+                            i)
+                          ),
                 ]),
               )
             ],

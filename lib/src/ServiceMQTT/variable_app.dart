@@ -2,6 +2,11 @@ import 'package:flutter/cupertino.dart';
 
 class AppData with ChangeNotifier {
   String uid = '';
+  List<List<bool>> allStates = [[]]; // Khởi tạo mảng trạng thái
+  void updateAllStates(List<List<bool>> a) {
+    allStates = a;
+    notifyListeners(); // Thông báo cho các người nghe về sự thay đổi
+  }
 
   void setUid(String newUid) {
     uid = newUid;
@@ -26,7 +31,6 @@ class AppData with ChangeNotifier {
     notifyListeners(); // Thông báo rằng giá trị đã thay đổi
   }
 
-  
   int totalDevice = 0;
   void settotalDevice(int newtotalDevice) {
     totalDevice = newtotalDevice;

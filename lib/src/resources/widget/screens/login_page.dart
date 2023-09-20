@@ -28,9 +28,13 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: <Widget>[
               SizedBox(
-                height: 140,
+                height: 40,
               ),
-              Image.asset("assets/images/ic_car_green.png"),
+              Container(
+                width: 200, // Độ rộng tùy chỉnh tại đây
+                height: 200, // Độ cao tùy chỉnh tại đây (nếu cần)
+                child: Image.asset("assets/images/smart-house.png"),
+              ),
               //Image.asset("assets/images/ic_fight.png"),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 40, 0, 6),
@@ -44,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(fontSize: 16, color: Color(0xff606470)),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(0, 145, 0, 20),
+                padding: const EdgeInsets.fromLTRB(0, 100, 0, 20),
                 child: TextField(
                   controller: _emailController,
                   style: TextStyle(fontSize: 18, color: Colors.black),

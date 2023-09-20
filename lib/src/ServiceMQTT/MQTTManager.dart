@@ -13,6 +13,7 @@ class MQTTManager extends ChangeNotifier {
   final MqttServerClient _client =
       MqttServerClient.withPort('broker.hivemq.com', 'flutter_test', 1883);
   String _topic = "";
+   String get topic => _topic;
   
   ValueChanged<String>? onMessageReceived;
 
@@ -114,10 +115,14 @@ class MQTTManager extends ChangeNotifier {
           'EXAMPLE::Change notification:: topic is <${c[0].topic}>, payload is <-- $pt -->');
       print('');
        if (onMessageReceived != null) {
-        onMessageReceived!(pt);
-      }
-    });
+      _topic = c[0].topic;
 
+        onMessageReceived!(pt);
+      print("Vu : $_topic");
+
+      }
+      
+    });
     print(
         'EXAMPLE::OnConnected client callback - Client connection was sucessful');
   }

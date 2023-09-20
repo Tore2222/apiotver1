@@ -1,46 +1,72 @@
 // ignore_for_file: file_names
 
 class Sensor {
-  final List<double> temp;
-  final List<double> volt;
+  final List<double>? temp;
+  final List<double>? volt;
   //int data;
-  String idDevice;
+  String? idDevice;
 
   Sensor(
-      {required this.temp,
-      required this.volt,
+      {this.temp,
+      this.volt,
       //  required this.data,
-      required this.idDevice});
+      this.idDevice});
 
   factory Sensor.fromJson(Map<String, dynamic> parsedJson) {
     var tempFromJson = parsedJson['temp'];
-    //print(streetsFromJson.runtimeType);
-    // List<String> streetsList = new List<String>.from(streetsFromJson);
-    List<double> templist = tempFromJson.cast<double>();
-    //int data = parsedJson['data'];
-    String idDevice = parsedJson['idDevice'];
+    List<double>? templist;
+    if (tempFromJson != null) {
+      templist = tempFromJson.cast<double>();
+    }
+
+    String? idDevice = parsedJson['idDevice'];
+
     var voltFromJson = parsedJson['volt'];
-    //print(streetsFromJson.runtimeType);
-    // List<String> streetsList = new List<String>.from(streetsFromJson);
-    List<double> voltlist = voltFromJson.cast<double>();
+    List<double>? voltlist;
+    if (voltFromJson != null) {
+      voltlist = voltFromJson.cast<double>();
+    }
 
     return Sensor(
-        temp: templist,
-        volt: voltlist,
-        //data: data,
-        idDevice: idDevice);
+      temp: templist,
+      volt: voltlist,
+      idDevice: idDevice,
+    );
+  }
+}
+
+class Sensor2 {
+  final double? temp;
+  final double? humi;
+  //int data;
+
+  Sensor2(
+      {this.temp,
+      this.humi,
+      //  required this.data,
+      });
+
+  factory Sensor2.fromJson(Map<String, dynamic> parsedJson) {
+    double? temp = parsedJson['temp'];
+
+    double? humi = parsedJson['humi'];
+
+    return Sensor2(
+      temp: temp,
+      humi: humi,
+    );
   }
 }
 
 class Sensor1 {
-  int data;
+  int? data;
 
   Sensor1({
-    required this.data,
+    this.data,
   });
 
   factory Sensor1.fromJson(Map<String, dynamic> parsedJson) {
-    int data = parsedJson['data'];
+    int? data = parsedJson['data'];
 
     return Sensor1(
       data: data,
