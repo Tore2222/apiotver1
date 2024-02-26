@@ -1,4 +1,4 @@
-import 'package:alan_voice/alan_voice.dart';
+//import 'package:alan_voice/alan_voice.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,8 +51,6 @@ class _TestScreenState extends State<TestScreen> {
       print(e.toString());
     }
   }
-
-  
 
   void ConnectMqtt() {
     // Future.delayed(
@@ -251,7 +249,6 @@ class _TestScreenState extends State<TestScreen> {
     });
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -747,9 +744,8 @@ class _TestScreenState extends State<TestScreen> {
                                             if (ChoseHub != '') {
                                               _databaseReference
                                                   .child(
-                                                      '$uid/room/id${newTitle}/idHub')
-                                                  .set(ChoseHub);
-                                              setState(() {});
+                                                      '$uid/room$ChoseHub/id${newTitle}/name')
+                                                  .set(newTitle);
                                             } else {
                                               MsgDialog.showMsgDialog1(
                                                   context, "Chose hub first");
@@ -838,9 +834,7 @@ class _TestScreenState extends State<TestScreen> {
                                       .child(
                                           '$uid/room$ChoseHub/id${Room[i]['name']}')
                                       .remove();
-                                  _databaseReference
-                                      .child('$uid/room/id${Room[i]['name']}')
-                                      .remove();
+
                                   // MsgDialog.showMsgDialog1(
                                   //     context, "$uid/id${Room[i]['name']}");
                                   setState(() {});

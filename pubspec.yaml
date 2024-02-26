@@ -40,7 +40,7 @@ dependencies:
   esp_smartconfig: ^1.1.11
   network_info_plus: ^4.0.1
   permission_handler: ^10.3.0
-  alan_voice: ^4.1.2
+ ## alan_voice: ^4.4.0
   shared_preferences: ^2.1.2
   
   flutter_iconpicker: ^3.2.4

@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:iotappver1/src/ServiceMQTT/variable_app.dart';
 import 'package:iotappver1/src/resources/widget/apps/bedroom.dart';
 import 'package:iotappver1/src/resources/widget/apps/kitchen.dart';
 import 'package:iotappver1/src/resources/widget/apps/room_page.dart';
@@ -102,12 +103,6 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
   //       () => _manager.subScribeTo("${ChoseHub}_A"));
   //   print(_manager.currentState.getAppConnectionState);
   // }
-  void ConnectMqtt() {
-    // Future.delayed(
-    //     const Duration(microseconds: 100), () => widget.manager.connect());
-    Future.delayed(const Duration(seconds: 1),
-        () => _manager.subScribeTo("${ChoseHub}_A_0000}"));
-  }
 
   @override
   void initState() {
@@ -120,6 +115,7 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
     } else {
       print("User is not logged in.");
     }
+
     _databaseReference.child('$uid').onValue.listen((event) {
       try {
         if (event.snapshot != null) {
@@ -137,8 +133,6 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
         print("Error: $e");
       }
     });
-    ConnectMqtt();
-  
 
     super.initState();
   }
@@ -293,16 +287,49 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                                       fontFamily: 'Roboto',
                                     ),
                                   ),
-                                  Text(
-                                   // "${_manager.currentState.gettemp} °C ",
-                                    "31 °C ",
+                                  //                       Text(
+                                  //                         "${Provider.of<AppData>(context, listen: false)
+                                  // .Temp} °C ",
+                                  //                         //"31 °C ",
 
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontFamily: 'Roboto',
-                                    ),
+                                  //                         style: TextStyle(
+                                  //                           fontWeight: FontWeight.bold,
+                                  //                           fontSize: 15,
+                                  //                           color: Colors.black,
+                                  //                           fontFamily: 'Roboto',
+                                  //                         ),
+                                  //                       ),
+                                  StreamBuilder(
+                                    stream: _databaseReference.onValue,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData &&
+                                          !snapshot.hasError &&
+                                          snapshot.data!.snapshot.value !=
+                                              null) {
+                                        // Truy cập dữ liệu từ snapshot
+                                        Map<dynamic, dynamic> data = snapshot
+                                            .data!
+                                            .snapshot
+                                            .value as Map<dynamic, dynamic>;
+
+                                        String temp = data['temp'].toString();
+
+                                        return Text(
+                                          '$temp %',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        );
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    },
+                                  ),
+                                  SizedBox(
+                                    width: 5,
                                   ),
                                   Text(
                                     "Humi : ",
@@ -313,16 +340,46 @@ class _AppsState extends State<Apps> with TickerProviderStateMixin {
                                       fontFamily: 'Roboto',
                                     ),
                                   ),
-                                  Text(
-                                    // "${_manager.currentState.gethum} %",
-                                    "83 % ",
+                                  //                       Text(
+                                  //                         "${Provider.of<AppData>(context, listen: false)
+                                  // .Humi} %",
+                                  //                         // "83 % ",
 
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                      color: Colors.black,
-                                      fontFamily: 'Roboto',
-                                    ),
+                                  //                         style: TextStyle(
+                                  //                           fontWeight: FontWeight.bold,
+                                  //                           fontSize: 15,
+                                  //                           color: Colors.black,
+                                  //                           fontFamily: 'Roboto',
+                                  //                         ),
+                                  //                       ),
+                                  StreamBuilder(
+                                    stream: _databaseReference.onValue,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.hasData &&
+                                          !snapshot.hasError &&
+                                          snapshot.data!.snapshot.value !=
+                                              null) {
+                                        // Truy cập dữ liệu từ snapshot
+                                        Map<dynamic, dynamic> data = snapshot
+                                            .data!
+                                            .snapshot
+                                            .value as Map<dynamic, dynamic>;
+
+                                        String humi = data['humi'].toString();
+
+                                        return Text(
+                                          '$humi %',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontFamily: 'Roboto',
+                                          ),
+                                        );
+                                      } else {
+                                        return CircularProgressIndicator();
+                                      }
+                                    },
                                   ),
                                 ],
                               ),

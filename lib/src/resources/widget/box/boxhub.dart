@@ -75,14 +75,14 @@ class _HubBoxState extends State<HubBox> {
                 Text(
                   '${widget.title}',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               Image.asset(
                 'assets/images/gateway.png',
                 width: 60,
-                height: 48,
+                height: 40,
               ),
               if (isPressed)
                 Container(

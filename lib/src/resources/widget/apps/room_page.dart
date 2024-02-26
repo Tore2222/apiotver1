@@ -1,4 +1,4 @@
-import 'package:alan_voice/alan_voice.dart';
+//import 'package:alan_voice/alan_voice.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:iotappver1/src/ServiceMQTT/variable_app.dart';
@@ -27,11 +27,12 @@ class _RoomPageState extends State<RoomPage> {
       FirebaseDatabase.instance.reference().child('users');
 
   List<Map<String, dynamic>> Device = [];
-        List<Map<String, dynamic>> settings3 = [];
-        List<Map<String, dynamic>> settings2 = [];
+  List<Map<String, dynamic>> settings3 = [];
+  List<Map<String, dynamic>> settings2 = [];
 
-  late List<List<bool>> allStates =
-      List.generate(3+Provider.of<AppData>(context, listen: false).lengthDevice +5, (index) => List.filled(11, false));
+  late List<List<bool>> allStates = List.generate(
+      3 + Provider.of<AppData>(context, listen: false).lengthDevice + 5,
+      (index) => List.filled(11, false));
   // late List<List<bool>> allStates = List.generate(
   //     Provider.of<AppData>(context, listen: false).lengthDevice + 2,
   //     (index) => List.filled(11, false));
@@ -55,6 +56,7 @@ class _RoomPageState extends State<RoomPage> {
 
   void upload(int data, int j) {
     String jsonData = "{\"data\":$data}";
+
     try {
       print("Quyefne1 :${widget.chosehub}_D_${j.toString().padLeft(4, '0')}");
       widget.manager.publish(
@@ -101,7 +103,7 @@ class _RoomPageState extends State<RoomPage> {
     ConnectMqtt();
     widget.manager.onMessageReceived = (message) {
       // Gọi setState để cập nhật trang
-      //print("Quyền : $message");
+      print("Quyền : $message");
       // print("Quyền : ${widget.manager.topic}");
 
       setState(() {
@@ -112,7 +114,15 @@ class _RoomPageState extends State<RoomPage> {
           allStates[int.parse(topic[topic.length - 1])][i] =
               widget.manager.currentState.getD(i);
         }
-        // print("Quyền : -- ${widget.manager.currentState.getd1}");
+        if (widget.manager.currentState.gettemp != -1) {
+          Provider.of<AppData>(context, listen: false)
+              .setTemp(widget.manager.currentState.gettemp);
+        }
+        if (widget.manager.currentState.gethum != -1) {
+          Provider.of<AppData>(context, listen: false)
+              .setHumi(widget.manager.currentState.gethum);
+        }
+        print("Quyền : -- ${widget.manager.currentState.gethum}");
       });
     };
 
@@ -129,7 +139,7 @@ class _RoomPageState extends State<RoomPage> {
       if (event.snapshot != null) {
         DataSnapshot snapshot = event.snapshot as DataSnapshot;
         Map<dynamic, dynamic> data = snapshot.value as Map<dynamic, dynamic>;
-         settings3 = [];
+        settings3 = [];
         data.forEach(
           (key, value) {
             if (value != null && value is Map<dynamic, dynamic>) {
@@ -183,7 +193,7 @@ class _RoomPageState extends State<RoomPage> {
                       'name': value['name'].toString(),
                       'location': value['location'].toString(),
                       'panID': value['panID'].toString(),
-                    'status': value['status'].toString()
+                      'status': value['status'].toString()
                     },
                   );
                 }
@@ -201,41 +211,40 @@ class _RoomPageState extends State<RoomPage> {
         //     .setlengthDevice1(settings2.length);
       }
     });
-  
+
     super.initState();
   }
-  
-  _RoomPageState() {
-    /// Init Alan Button with project key from Alan AI Studio
-    AlanVoice.addButton(
-        "112d58930d9579f9430a22fe21297be42e956eca572e1d8b807a3e2338fdd0dc/stage");
-    buttonAlign:
-    AlanVoice.BUTTON_ALIGN_LEFT;
 
-    /// Handle commands from Alan AI Studio
-    AlanVoice.onCommand.add((command) {
-      debugPrint("got new command ${command.toString()}");
-      // Xử lý các lệnh từ Alan AI Studio tại đây
-      switch (command.data['command']) {
-        case 'open the door':
-          upload(2,2);
-          break;
-        case 'open the light in the kitchen':
-          upload(4,2);
-          break;
-        case 'open the light in the bedroom':
-          upload(8,2);
-          break;
-        case 'open the fan in the bedroom':
-          upload(1,2);
-          break;
-        
-      }
-      // Dựa vào command để điều khiển các thiết bị trong phòng khách
+  // _RoomPageState() {
+  //   /// Init Alan Button with project key from Alan AI Studio
+  //  // AlanVoice.addButton(
+  //       "112d58930d9579f9430a22fe21297be42e956eca572e1d8b807a3e2338fdd0dc/stage");
+  //   buttonAlign:
+  //   AlanVoice.BUTTON_ALIGN_LEFT;
 
-      // Các lệnh khác tương tự
-    });
-  }
+  //   /// Handle commands from Alan AI Studio
+  //   AlanVoice.onCommand.add((command) {
+  //     debugPrint("got new command ${command.toString()}");
+  //     // Xử lý các lệnh từ Alan AI Studio tại đây
+  //     switch (command.data['command']) {
+  //       case 'open the door':
+  //         upload(2, 2);
+  //         break;
+  //       case 'open the light in the kitchen':
+  //         upload(4, 2);
+  //         break;
+  //       case 'open the light in the bedroom':
+  //         upload(8, 2);
+  //         break;
+  //       case 'open the fan in the bedroom':
+  //         upload(1, 2);
+  //         break;
+  //     }
+  //     // Dựa vào command để điều khiển các thiết bị trong phòng khách
+
+  //     // Các lệnh khác tương tự
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -267,15 +276,15 @@ class _RoomPageState extends State<RoomPage> {
                                 Device[i]['name'] == "Cửa Cuốn"
                             ? "LOCKED"
                             : "OFF",
-                        isChecked: i>(settings3.length-1)?allStates[int.parse((Device[i]
-                            ['panID'])[(Device[i]['panID']).length - 1])][0]: allStates[int.parse((Device[i]
-                            ['panID'])[(Device[i]['panID']).length - 1])][i],
-                        toggle:i>(settings3.length-1)? () => toggle_d(
-                            int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1]),
-                            0): () => toggle_d(
-                            int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1]),
-                            i)
-                          ),
+                        isChecked: i > (settings3.length - 1)
+                            ? allStates[int.parse((Device[i]
+                                ['panID'])[(Device[i]['panID']).length - 1])][0]
+                            : allStates[int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1])]
+                                [i],
+                        toggle: i > (settings3.length - 1)
+                            ? () =>
+                                toggle_d(int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1]), 0)
+                            : () => toggle_d(int.parse((Device[i]['panID'])[(Device[i]['panID']).length - 1]), i)),
                 ]),
               )
             ],

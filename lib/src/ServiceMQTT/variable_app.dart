@@ -18,6 +18,16 @@ class AppData with ChangeNotifier {
     ChoseHub = newChoseHub;
     notifyListeners(); // Thông báo rằng giá trị đã thay đổi
   }
+   int Temp = 0;
+  void setTemp(int newChoseHub) {
+    Temp = newChoseHub;
+    notifyListeners(); // Thông báo rằng giá trị đã thay đổi
+  }
+  int Humi = 0;
+  void setHumi(int newChoseHub) {
+    Humi = newChoseHub;
+    notifyListeners(); // Thông báo rằng giá trị đã thay đổi
+  }
 
   int lengthDevice1 = 0;
   void setlengthDevice1(int newlengthDevice1) {

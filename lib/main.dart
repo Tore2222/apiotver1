@@ -20,10 +20,10 @@ void main() async {
 
   runApp(
     ChangeNotifierProvider(
-      create: (context) => AppData(),
+      create: (_) => AppData(),
       child: Myapp(
           // new AuthBloc(),
-          const MaterialApp(home: HomePage())),
+          const MaterialApp(home: LoginPage())),
     ),
   );
 }

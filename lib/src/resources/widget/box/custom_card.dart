@@ -79,7 +79,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
         });
       },
       child: Container(
-        height: 150,
+        height: 160,
         width: widget.size.width * 0.4,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -138,7 +138,7 @@ class _CustomCardState extends State<CustomCard> with TickerProviderStateMixin {
                       : Container(),
                 ],
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 5),
               Text(
                 widget.title,
                 style: TextStyle(
